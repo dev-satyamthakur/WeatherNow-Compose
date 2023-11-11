@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -63,4 +65,35 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
+//    Dagger Hilt
+    implementation "com.google.dagger:hilt-android:2.48"
+    implementation 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-beta01'
+    kapt "com.google.dagger:hilt-compiler:2.44"
+
+//    Navigation
+    def nav_version = "2.7.5"
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+
+//    Hilt navigation
+    implementation 'androidx.hilt:hilt-navigation-compose:1.1.0'
+
+    // Retrofit2
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    // Moshi
+    implementation 'com.squareup.moshi:moshi:2.9.0'
+    // Interceptor
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+
+    // ViewModel
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2'
+
+    // Location services
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes true
 }
