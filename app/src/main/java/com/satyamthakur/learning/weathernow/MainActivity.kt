@@ -6,22 +6,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModel
+import androidx.compose.ui.graphics.Color.Companion
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.satyamthakur.learning.weathernow.presentation.WeatherViewModel
 import com.satyamthakur.learning.weathernow.presentation.ui.WeatherCard
+import com.satyamthakur.learning.weathernow.presentation.ui.WeatherForecast
 import com.satyamthakur.learning.weathernow.ui.theme.DarkBlue
 import com.satyamthakur.learning.weathernow.ui.theme.DeepBlue
 import com.satyamthakur.learning.weathernow.ui.theme.WeatherNowTheme
@@ -42,21 +45,45 @@ class MainActivity : ComponentActivity() {
         ) {
             viewModel.loadWeatherInfo()
         }
-        permissionLauncher.launch(arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ))
+        permissionLauncher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
         setContent {
             WeatherNowTheme {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(DarkBlue)
+                Box(
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    WeatherCard(
-                        state = viewModel.state,
-                        backgroundColor = DeepBlue
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(DarkBlue)
+                    ) {
+                        WeatherCard(
+                            state = viewModel.state,
+                            backgroundColor = DeepBlue
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        WeatherForecast(state = viewModel.state)
+                    }
+
+                    if (viewModel.state.isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                    viewModel.state.error?.let { error ->
+                        Text(
+                            text = error,
+                            color = androidx.compose.ui.graphics.Color.Red,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
                 }
             }
         }
